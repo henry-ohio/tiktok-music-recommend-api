@@ -1,0 +1,17 @@
+version: '3.6'
+
+services:
+  postgres:
+    container_name: tiktok_analyzer_postgres
+    image: postgres:14.4
+    restart: always
+    ports: 
+      - 0.0.0.0:5438:5432
+    volumes:
+      - ./db_data/pgdb_data:/var/lib/postgresql/data
+    env_file:
+      - ../.env
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Abc12345
+      - POSTGRES_DB=postgres
