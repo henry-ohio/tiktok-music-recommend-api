@@ -45,11 +45,11 @@ class RecommendMusicRepository:
         instance = await self.tiktok_post_dao.save(self.tiktok_post_dao.create(**asdict(tiktok_post)))
         return instance
     
-    async def update_tiktok_post(self, tiktok_post: TikTokPostEntity) -> TikTokPostEntity:
+    async def update_tiktok_post(self, tiktok_post: TikTokPostEntity, **kwargs) -> TikTokPostEntity:
         """
         Write tiktok post to db
         """
-        instance = await self.tiktok_post_dao.save(tiktok_post)
+        instance = await self.tiktok_post_dao.save(self.tiktok_post_dao.merge(tiktok_post, **kwargs))
         return instance
 
 

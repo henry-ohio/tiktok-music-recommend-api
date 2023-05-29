@@ -123,14 +123,14 @@ class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
         else:
             author = await self.repository.update_author(
                 author,
-                tiktok_id=author_meta['id'],
                 name=author_meta['name'],
                 tiktok_display_name=author_meta['name'],
                 tiktok_nickname=author_meta['nickName'],
                 tiktok_is_verified=author_meta['verified'],
                 tiktok_signnature=author_meta['signature'],
                 tiktok_avatar=author_meta['avatar'],
-                tiktok_is_private_account=author_meta['privateAccount'])
+                tiktok_is_private_account=author_meta['privateAccount']
+            )
 
         if post is None:
             post = TikTokPostEntity(
@@ -147,6 +147,16 @@ class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
             )
             post = await self.repository.save_tiktok_post(post)
         else:
-            post = await self.repository.update_tiktok_post(post)
+            post = await self.repository.update_tiktok_post(post, 
+                web_video_url=post_data['webVideoUrl'],
+                digg_count=post_data['diggCount'],
+                share_count=post_data['shareCount'],
+                play_count=post_data['playCount'],
+                comment_count=post_data['commentCount'],
+                tiktok_location=post_data['locationCreated'],
+                author_id=author.id, # PK to author
+                video_id=video.id, # PK to video
+                music_id=music.id, # PK to music
+            )
 
     
