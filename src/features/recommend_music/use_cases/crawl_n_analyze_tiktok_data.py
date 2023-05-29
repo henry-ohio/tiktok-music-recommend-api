@@ -9,12 +9,14 @@ from entities.post import TikTokPostEntity
 
 from .base import BaseRecommendMusicUsecase
 
+loop = asyncio.get_event_loop()
+
 class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
     def __init__(self):
         super().__init__()
 
     def execute(self, *args, **kwargs):
-        return asyncio.run(self.__execute(*args, **kwargs))
+        return loop.run_until_complete(self.__execute(*args, **kwargs))
 
     async def __execute(self, *args, **kwargs):
         """
@@ -104,18 +106,31 @@ class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
         video = await self.repository.save_video(video)
 
         author_meta = post_data['authorMeta']
-        author = AuthorEntity(
-            tiktok_id=author_meta['id'],
-            name=author_meta['name'],
-            tiktok_display_name=author_meta['name'],
-            tiktok_nickname=author_meta['nickName'],
-            tiktok_is_verified=author_meta['verified'],
-            tiktok_signnature=author_meta['signature'],
-            tiktok_avatar=author_meta['avatar'],
-            tiktok_is_private_account=author_meta['privateAccount'],
-        )
+        author = await self.repository.get_author_by_tiktok_id(author_meta['id'])
+        if author is None:
+            author = AuthorEntity(
+                tiktok_id=author_meta['id'],
+                name=author_meta['name'],
+                tiktok_display_name=author_meta['name'],
+                tiktok_nickname=author_meta['nickName'],
+                tiktok_is_verified=author_meta['verified'],
+                tiktok_signnature=author_meta['signature'],
+                tiktok_avatar=author_meta['avatar'],
+                tiktok_is_private_account=author_meta['privateAccount'],
+            )
 
-        author = await self.repository.save_author(author)
+            author = await self.repository.save_author(author)
+        else:
+            author = await self.repository.update_author(
+                author,
+                tiktok_id=author_meta['id'],
+                name=author_meta['name'],
+                tiktok_display_name=author_meta['name'],
+                tiktok_nickname=author_meta['nickName'],
+                tiktok_is_verified=author_meta['verified'],
+                tiktok_signnature=author_meta['signature'],
+                tiktok_avatar=author_meta['avatar'],
+                tiktok_is_private_account=author_meta['privateAccount'])
 
         if post is None:
             post = TikTokPostEntity(

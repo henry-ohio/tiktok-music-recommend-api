@@ -69,11 +69,25 @@ class RecommendMusicRepository:
         music_instance = await self.music_dao.save(music)
         return music_instance
 
-    async def save_author(self, author: AuthorEntity) -> MusicEntity:
+    async def save_author(self, author: AuthorEntity) -> AuthorEntity:
         """
         Write author to db
         """
         instance = await self.author_dao.save(self.author_dao.create(**asdict(author)))
+        return instance
+    
+    async def update_author(self, author: AuthorEntity, **kwargs) -> AuthorEntity:
+        """
+        Write author to db
+        """
+        instance = await self.author_dao.save(self.author_dao.merge(author, **kwargs))
+        return instance
+    
+    async def get_author_by_tiktok_id(self, tiktok_id: str) -> AuthorEntity:
+        """
+        Get author
+        """
+        instance = await self.author_dao.find_one_or_none(tiktok_id=tiktok_id)
         return instance
 
     async def save_video(self, video: VideoEntity) -> MusicEntity:
