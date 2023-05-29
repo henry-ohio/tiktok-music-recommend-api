@@ -18,7 +18,7 @@ class TikTokPostORM(BaseSqlORM, TikTokPostEntity):
         Column("tiktok_location", String, nullable=True),
         get_id_fk_column("author_id", "author.id"),
         get_id_fk_column("video_id", "video.id"),
-        get_id_fk_column("music_id", "music.id")
+        get_id_fk_column("music_id", "music.id"),
         *get_common_columns()
     )
 

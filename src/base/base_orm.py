@@ -82,7 +82,7 @@ def get_fk_column(
         )
 
 
-def get_common_columns(is_fk_user=True) -> List[Column]:
+def get_common_columns(is_fk_user=False) -> List[Column]:
     return [
         Column("created_at", TIMESTAMP(timezone=False), server_default=func.now()),
         get_user_fk_column("created_by") if is_fk_user else Column("created_by", psql.UUID(as_uuid=False)),

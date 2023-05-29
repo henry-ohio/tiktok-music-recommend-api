@@ -81,6 +81,30 @@ TODO
 
 ## Create migration
 
+## Migration database
 
+To create migration, run:
+  
+```bash
+alembic --raiseerr -c src/alembic.ini revision --autogenerate -m "message"
+```
 
 ## Apply migration
+
+- Upgrade
+  
+```bash
+alembic --raiseerr -c src/alembic.ini upgrade head 
+
+alembic --raiseerr -c src/alembic.ini stamp head 
+```
+
+- Downgrade
+
+```bash
+cd src
+
+alembic --raiseerr -c src/alembic.ini downgrade -1
+
+alembic --raiseerr -c src/alembic.ini stamp head
+```
