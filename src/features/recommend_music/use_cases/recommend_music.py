@@ -6,6 +6,12 @@ class UsecaseRecommendMusic(BaseRecommendMusicUsecase):
         super().__init__()
 
     def execute(self):
-        best_musics = self.repository.get_music(sorted_by='score') 
+        # Find top best musics
+        # Sort creterias (from most important to less)
+        # - shareCount
+        # - commentCount
+        # - diggCount
+        # - playCount
+        best_musics = self.repository.get_music()
 
         return best_musics

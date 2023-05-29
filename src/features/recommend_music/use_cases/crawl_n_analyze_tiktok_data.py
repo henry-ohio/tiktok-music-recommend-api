@@ -1,5 +1,5 @@
 import asyncio
-
+from loguru import logger
 from features.recommend_music.data import RecommendMusicRepository
 
 from entities.music import MusicEntity, TiktokMusicEntity
@@ -10,6 +10,7 @@ from entities.post import TikTokPostEntity
 from .base import BaseRecommendMusicUsecase
 
 loop = asyncio.get_event_loop()
+
 
 class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
     def __init__(self):
@@ -31,7 +32,6 @@ class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
             await self.__save_one_post(post_data)
 
         return len(tiktok_posts)
-        
 
     async def __save_one_post(self, post_data):
         """
@@ -45,37 +45,49 @@ class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
         post = await self.repository.get_post_by_tiktok_id(post_data['id'])
         music_meta = post_data['musicMeta']
         music, tiktok_music = await self.repository.get_music_by_tiktok_id(music_meta['musicId'])
-
-        digg_count = post_data["diggCount"] 
+        
+        digg_count = post_data["diggCount"]
         share_count = post_data["shareCount"]
         play_count = post_data["playCount"]
         comment_count = post_data["commentCount"]
 
         if music is not None:
+            logger.debug(f"Existing music found {music}")
             # Update only
             # If new post, then add the count
             # If existing post, subtract the counts first, then add (to update latest count only)
 
             # TODO prevent racing condition here
-            if post is None:
-                # New post use this music
-                music.total_digg_count = music.total_digg_count + digg_count
-                music.total_share_count = music.total_share_count + share_count
-                music.total_play_count = music.total_play_count + play_count
-                music.total_comment_count = music.total_comment_count + comment_count
-            else:
-                music.total_digg_count = music.total_digg_count - post.digg_count + digg_count
-                music.total_share_count = music.total_share_count - post.share_count + share_count
-                music.total_play_count = music.total_play_count - post.play_count + play_count
-                music.total_comment_count = music.total_comment_count - post.comment_count + comment_count
+            total_digg_count = music.total_digg_count + digg_count
+            total_share_count = music.total_share_count + share_count
+            total_play_count = music.total_play_count + play_count
+            total_comment_count = music.total_comment_count + comment_count
+            if post is not None:
+                logger.debug(f"Existing post found {post}")
 
-                self.repository.update_music(music)
+                total_digg_count -= post.digg_count
+                total_share_count -= post.share_count
+                total_play_count -= post.play_count
+                total_comment_count -= post.comment_count
+            
+            update_dict = dict(total_digg_count=total_digg_count,
+                               total_share_count=total_share_count,
+                               total_play_count=total_play_count,
+                               total_comment_count=total_comment_count)
+            logger.debug(f"Updating music {music} {update_dict}")
+
+            await self.repository.update_music(music,
+                                               total_digg_count=total_digg_count,
+                                               total_share_count=total_share_count,
+                                               total_play_count=total_play_count,
+                                               total_comment_count=total_comment_count)
         else:
+            logger.debug(f"Updating music {music}")
             # Insert new music
             music = MusicEntity(
                 name=music_meta['musicName'],
                 author_name=music_meta['musicAuthor'],
-                total_digg_count=digg_count, 
+                total_digg_count=digg_count,
                 total_share_count=share_count,
                 total_play_count=play_count,
                 total_comment_count=comment_count
@@ -88,22 +100,8 @@ class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
                 play_url=music_meta['playUrl'],
                 cover_medium_url=music_meta['coverMediumUrl']
             )
-        
+
             music, tiktok_music = await self.repository.save_music(music, tiktok_music)
-        
-        video_meta = post_data['videoMeta']
-        video = VideoEntity(
-            height=video_meta["height"],
-            width=video_meta["width"],
-            duration=video_meta["duration"],
-            tiktok_cover=video_meta["coverUrl"],
-            tiktok_original_cover=video_meta["originalCoverUrl"],
-            definition=video_meta["definition"],
-            format=video_meta["format"],
-            original_download_address=video_meta["originalDownloadAddr"],
-            download_address=video_meta["downloadAddr"]
-        )
-        video = await self.repository.save_video(video)
 
         author_meta = post_data['authorMeta']
         author = await self.repository.get_author_by_tiktok_id(author_meta['id'])
@@ -133,6 +131,19 @@ class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
             )
 
         if post is None:
+            video_meta = post_data['videoMeta']
+            video = VideoEntity(
+                height=video_meta["height"],
+                width=video_meta["width"],
+                duration=video_meta["duration"],
+                tiktok_cover=video_meta["coverUrl"],
+                tiktok_original_cover=video_meta["originalCoverUrl"],
+                definition=video_meta["definition"],
+                format=video_meta["format"],
+                original_download_address=video_meta["originalDownloadAddr"],
+                download_address=video_meta["downloadAddr"]
+            )
+            video = await self.repository.save_video(video)
             post = TikTokPostEntity(
                 tiktok_id=post_data['id'],
                 web_video_url=post_data['webVideoUrl'],
@@ -141,22 +152,15 @@ class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
                 play_count=post_data['playCount'],
                 comment_count=post_data['commentCount'],
                 tiktok_location=post_data['locationCreated'],
-                author_id=author.id, # PK to author
-                video_id=video.id, # PK to video
-                music_id=music.id, # PK to music
+                author_id=author.id,  # PK to author
+                video_id=video.id,  # PK to video
+                music_id=music.id,  # PK to music
             )
             post = await self.repository.save_tiktok_post(post)
         else:
-            post = await self.repository.update_tiktok_post(post, 
-                web_video_url=post_data['webVideoUrl'],
-                digg_count=post_data['diggCount'],
-                share_count=post_data['shareCount'],
-                play_count=post_data['playCount'],
-                comment_count=post_data['commentCount'],
-                tiktok_location=post_data['locationCreated'],
-                author_id=author.id, # PK to author
-                video_id=video.id, # PK to video
-                music_id=music.id, # PK to music
-            )
-
-    
+            post = await self.repository.update_tiktok_post(post,
+                                                            digg_count=post_data['diggCount'],
+                                                            share_count=post_data['shareCount'],
+                                                            play_count=post_data['playCount'],
+                                                            comment_count=post_data['commentCount'],
+                                                            )

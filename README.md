@@ -10,9 +10,27 @@ This is source code for TikTok Music Recommendation testing assignment.
 - PostgreSQL
 - Docker
 
-## Set up and run
+## Set up and run localhost
 
-Run `docker compose up -d` to set start both database and backend API.
+1. Run `docker compose up -d` to start database service. Wait for a few minutes for it to get ready.
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Apply migrations:
+
+```bash
+alembic --raiseerr -c src/alembic.ini upgrade head 
+alembic --raiseerr -c src/alembic.ini stamp head 
+```
+
+4. Start server
+
+```bash
+python src/main.py
+```
 
 ## Code specification
 

@@ -94,27 +94,10 @@ class BaseDao:
             return query_result.first()
 
     async def find(self, accept_languages=None, *where, **attrs) -> M:
-        statement = sa.select(self.model).where(*where).filter_by(**attrs)
-        if accept_languages is not None:
-            # If some reasults don't have the listed language,
-            # move on to the next and try to get them all
-            current_results = []
-            async with self.session_builder() as session:
-                for lan in accept_languages:
-                    localized_statement = statement.filter(
-                        sa.and_(
-                            self.model.language == lan,
-                            sa.not_(
-                                self.model.id.in_([r.id for r in current_results])
-                            )
-                        )
-                    )
-
-                    query_result = await session.execute(localized_statement)
-                    results = query_result.unique().scalars().all()
-                    current_results.extend(results)
-            return current_results
-
+        statement = sa.select(self.model)\
+            .where(*where)\
+                .filter_by(**attrs)\
+                .order_by()
         async with self.session_builder() as session:
             query_result = await session.execute(statement)
             results = query_result.unique().scalars().all()

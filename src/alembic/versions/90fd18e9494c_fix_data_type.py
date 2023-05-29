@@ -1,8 +1,8 @@
 """fix data type
 
-Revision ID: f3aab61bf72c
-Revises: 1a27c1522829
-Create Date: 2023-05-29 18:19:09.036904
+Revision ID: 90fd18e9494c
+Revises: 27ccbcd90084
+Create Date: 2023-05-29 21:08:47.279209
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f3aab61bf72c'
-down_revision = '1a27c1522829'
+revision = '90fd18e9494c'
+down_revision = '27ccbcd90084'
 branch_labels = None
 depends_on = None
 
