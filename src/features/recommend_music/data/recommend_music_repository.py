@@ -1,9 +1,9 @@
 import os, json
-from typing import Tuple
+from typing import List, Tuple
 
 from loguru import logger
 from dataclasses import asdict
-from .dao.music_dao import MusicDAO, TikTokMusicDAO
+from .dao.music_dao import MusicDAO, TikTokMusicDAO, MusicORM
 from .dao.author_dao import AuthorDAO
 from .dao.video_dao import VideoDAO
 from .dao.tiktok_post_dao import TikTokPostDAO
@@ -98,11 +98,19 @@ class RecommendMusicRepository:
         return instance
 
     
-    async def get_music(self, sort_by=None, skip=0, limit=1):
+    async def get_music(self, skip=0, limit=5) -> List[MusicEntity]:
         """
         Get music recommendation
         TODO: For now, just do simple ranking by scoring.
         """
+        results = await self.music_dao.find(orders=[
+            MusicORM.total_share_count.desc(),
+            MusicORM.total_comment_count.desc(),
+            MusicORM.total_digg_count.desc(),
+            MusicORM.total_play_count.desc()
+        ], skip=skip, limit=limit)
+
+        return results
 
     async def get_post_by_tiktok_id(self, tiktok_id):
         tiktok_post = await self.tiktok_post_dao.find_one_or_none(tiktok_id=tiktok_id)

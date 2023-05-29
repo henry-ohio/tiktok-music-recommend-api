@@ -1,11 +1,11 @@
 [{
-  "id": "7234585604439149852",
+  "id": "7234585604439149877",
   "text": "Ανεκδοτο τρωγοντας τυλιχτο με μαρουλι",
   "createTime": 1684433229,
   "createTimeISO": "2023-05-18T18:07:09.000Z",
   "locationCreated": "GR",
   "authorMeta": {
-    "id": "6818449457992156165",
+    "id": "6818449457992156177",
     "name": "nikitas.l",
     "nickName": "Nikitas Loukas",
     "verified": false,
@@ -23,7 +23,7 @@
     "musicAlbum": "This Moment",
     "playUrl": "https://sf16-ies-music-sg.tiktokcdn.com/obj/tos-alisg-ve-2774/ok0hJjRAIDCWohEAZkRzNAqsXWBfMjkwYv0yUV",
     "coverMediumUrl": "https://p16-sg.tiktokcdn.com/aweme/200x200/tos-alisg-v-2774/586abea097c748c5a41a0248351971c1.jpeg",
-    "musicId": "7215415773425043458"
+    "musicId": "7215415773425043477"
   },
   "webVideoUrl": "https://www.tiktok.com/@nikitas.l/video/7234585604439149851",
   "mediaUrls": [
@@ -40,9 +40,9 @@
     "originalDownloadAddr": "https://v16-webapp-prime.us.tiktok.com/video/tos/useast2a/tos-useast2a-pve-0037-aiso/ogV1IIfR42nag2TmhQzAERMIIryoaARCBzhlta/?a=1988&ch=0&cr=0&dr=0&lr=tiktok_m&cd=0%7C0%7C1%7C0&cv=1&br=2792&bt=1396&cs=0&ds=3&ft=_rKBMBnZq8Zmowhcuc_vjsmbsAhLrus&mime_type=video_mp4&qs=0&rc=aDQ5PDs0OzppPDpmNThoZEBpM3Bxdzs6Zmc5azMzZjczM0A0XjQvLmFeX18xYF8yLy4uYSMxX2hpcjRfZWdgLS1kMWNzcw%3D%3D&btag=e00000000&expire=1684953560&l=20230524123909EA8DFC378E8E091A30F1&ply_type=2&policy=2&signature=b861d8a69b1c5cef11d894c8f1501bb0&tk=tt_chain_token",
     "downloadAddr": "https://v16-webapp-prime.us.tiktok.com/video/tos/useast2a/tos-useast2a-pve-0037-aiso/ogV1IIfR42nag2TmhQzAERMIIryoaARCBzhlta/?a=1988&ch=0&cr=0&dr=0&lr=tiktok_m&cd=0%7C0%7C1%7C0&cv=1&br=2792&bt=1396&cs=0&ds=3&ft=_rKBMBnZq8Zmowhcuc_vjsmbsAhLrus&mime_type=video_mp4&qs=0&rc=aDQ5PDs0OzppPDpmNThoZEBpM3Bxdzs6Zmc5azMzZjczM0A0XjQvLmFeX18xYF8yLy4uYSMxX2hpcjRfZWdgLS1kMWNzcw%3D%3D&btag=e00000000&expire=1684953560&l=20230524123909EA8DFC378E8E091A30F1&ply_type=2&policy=2&signature=b861d8a69b1c5cef11d894c8f1501bb0&tk=tt_chain_token"
   },
-  "diggCount": 70000,
-  "shareCount": 660000,
-  "playCount": 900000000,
+  "diggCount": 60,
+  "shareCount": 900,
+  "playCount": 285,
   "commentCount": 2,
   "mentions": [],
   "hashtags": [],

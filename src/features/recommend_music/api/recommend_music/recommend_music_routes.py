@@ -1,13 +1,13 @@
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from kink import inject
+from dataclasses import asdict
 from features.recommend_music.use_cases.crawl_n_analyze_tiktok_data import UsecaseCrawlAndAnalyzeTikTokData
-from features.recommend_music.use_cases.recommend_music import RecommendMusicRepository
+from features.recommend_music.use_cases.recommend_music import UsecaseRecommendMusic
 
 router = Blueprint('recommend-music', __name__)
 
 @router.route('/analyze-tiktok/', methods=['POST'])
-@inject
 def analyze_tiktok():
     uc = UsecaseCrawlAndAnalyzeTikTokData()
     result = uc.execute()
@@ -16,13 +16,15 @@ def analyze_tiktok():
     })
 
 @router.route('/', methods=['GET'])
-@inject
 def get_music_recommendation():
-    uc = RecommendMusicRepository()
-    result = uc.execute()
+    args = request.args
+    skip = args.get('skip', 0)
+    limit = args.get('limit', 5)
+
+    uc = UsecaseRecommendMusic()
+    result = uc.execute(skip=skip, limit=limit)
+
     return jsonify({
         'message': 'success',
-        'data': [
-            # TODO list of recommended musics here
-        ]
+        'data': [asdict(r) for r in result]
     })

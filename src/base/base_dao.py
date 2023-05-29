@@ -93,11 +93,21 @@ class BaseDao:
             query_result = await session.execute(statement)
             return query_result.first()
 
-    async def find(self, accept_languages=None, *where, **attrs) -> M:
+    async def find(self, 
+                   where: list = [], 
+                   filters: dict = {}, 
+                   orders: list = [],
+                   skip: int = None,
+                   limit: int = None) -> M:
         statement = sa.select(self.model)\
             .where(*where)\
-                .filter_by(**attrs)\
-                .order_by()
+                .filter_by(**filters)\
+                .order_by(*orders)
+        if skip is not None:
+            statement = statement.offset(skip)
+        if limit is not None:
+            statement = statement.limit(limit)
+            
         async with self.session_builder() as session:
             query_result = await session.execute(statement)
             results = query_result.unique().scalars().all()
