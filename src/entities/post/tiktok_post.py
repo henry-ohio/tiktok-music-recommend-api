@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
-@dataclass
+@dataclass(kw_only=True)
 class TikTokPostEntity:
-    id: str
+    id: Optional[str] = None
     tiktok_id: str
     web_video_url: str
     digg_count: int

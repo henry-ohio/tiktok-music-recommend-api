@@ -9,7 +9,7 @@ class TikTokPostORM(BaseSqlORM, TikTokPostEntity):
         "tiktok_post",
         BaseSqlORM.metadata,
         get_common_id_column(),
-        Column("tiktok_id", String, nullable=False),
+        Column("tiktok_id", String, nullable=False, unique=True),
         Column("web_video_url", String, nullable=True),
         Column("digg_count", Integer, nullable=False),
         Column("share_count", Integer, nullable=False),

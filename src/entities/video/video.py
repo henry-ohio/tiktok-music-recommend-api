@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from typing import Optional
 
-@dataclass
+@dataclass(kw_only=True)
 class VideoEntity:
-    id: str
+    id: Optional[str] = None
     original_download_address: str
     download_address: str
     format: str

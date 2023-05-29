@@ -1,6 +1,6 @@
 
 import sqlalchemy as sa
-from sqlalchemy import select
+from sqlalchemy import select, orm
 
 from typing import (
     Dict,
@@ -16,12 +16,11 @@ from .base_orm import BaseSqlORM
 
 from kink import di, inject
 # Make sure the di is there
-from modules.sql_database_module import get_async_session_builder, sync_session
+from modules.sql_database_module import get_async_session_builder
 from loguru import logger
 M = TypeVar('M', bound=BaseSqlORM)
 
-di['session_builder'] = lambda di: sync_session()
-# di['session_builder'] = lambda di: get_async_session_builder()
+di['session_builder'] = lambda di: get_async_session_builder()
 
 class BaseDao:
     model: M
@@ -31,7 +30,7 @@ class BaseDao:
         super().__init__()
         if self.model is None:
             raise Exception("This should be set to a Model class.")
-        self.session_builder = session_builder
+        self.session_builder: orm.sessionmaker = session_builder
 
     def create(self, **attrs) -> M:
         return self.model(**attrs)
@@ -218,3 +217,4 @@ class BaseDao:
         count_statement = sa.select([sa.func.count()]).where(*where).select_from(select_model)
         async with self.session_builder() as session:
             return (await session.execute(count_statement)).scalar()
+        

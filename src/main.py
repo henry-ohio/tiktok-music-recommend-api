@@ -8,7 +8,7 @@ init_di()
 
 app = Flask(__name__)
 
-app.register_blueprint(recommend_music_route, url_prefix='/recommend-music')
+app.register_blueprint(recommend_music_route, url_prefix='/recommend-music/')
 
 if __name__ == '__main__':
     app.run()

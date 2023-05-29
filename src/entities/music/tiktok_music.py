@@ -1,12 +1,11 @@
 from dataclasses import dataclass
+from typing import Optional
 
-@dataclass
+@dataclass(kw_only=True)
 class TiktokMusicEntity:
-    id: str
-    music_id: str # FK to Music Entity
-    tiktok_music_id: str
-    tiktok_name: str
-    author_name: str
+    id: Optional[str] = None
+    music_id: Optional[str] = None # FK to Music Entity
+    tiktok_id: str
     is_original: bool
     album: str
     play_url: str

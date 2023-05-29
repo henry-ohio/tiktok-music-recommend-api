@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from typing import Optional
 
-@dataclass
+@dataclass(kw_only=True)
 class AuthorEntity:
-    id: str
+    id: Optional[str] = None
     name: str
     tiktok_id: str
     tiktok_nickname: str

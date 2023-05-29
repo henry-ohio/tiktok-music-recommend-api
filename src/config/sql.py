@@ -26,7 +26,7 @@ class SQLSettings(BaseSettings):
             return value
 
         return PostgresDsn.build(
-            scheme='postgresql',
+            scheme='postgresql+asyncpg',
             user=values.get('db_user'),
             password=values.get('db_password'),
             host=values.get('db_host'),
