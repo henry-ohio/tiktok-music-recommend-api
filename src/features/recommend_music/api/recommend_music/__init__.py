@@ -1,1 +1,1 @@
-from .recommend_music_routes import *
+from .recommend_music_routes import router

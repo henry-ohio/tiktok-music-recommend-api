@@ -1,7 +1,7 @@
 
 from flask import Blueprint, jsonify
 from kink import inject
-from use_cases.crawl_n_analyze_tiktok_data import UsecaseCrawlAndAnalyzeTikTokData
+from features.recommend_music.use_cases.crawl_n_analyze_tiktok_data import UsecaseCrawlAndAnalyzeTikTokData
 
 router = Blueprint('recommend-music', __name__)
 
@@ -14,7 +14,7 @@ def analyze_tiktok():
         'message': 'success'
     })
 
-@router.route('/recommend-music', methods=['GET'])
+@router.route('/', methods=['GET'])
 @inject
 def get_music_recommendation():
     uc = UsecaseCrawlAndAnalyzeTikTokData()

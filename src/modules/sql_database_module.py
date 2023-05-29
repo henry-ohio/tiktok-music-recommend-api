@@ -31,10 +31,10 @@ def get_async_session_builder(engine: AsyncEngine) -> orm.sessionmaker:
     )
     return factory
 
-
-def sync_session(url: str) -> orm.scoped_session:
+@inject
+def sync_session(db_settings: SQLSettings) -> orm.scoped_session:
     engine = create_engine(
-        url, pool_pre_ping=True, future=True,
+        db_settings.database_uri, pool_pre_ping=True, future=True,
     )
     factory = orm.sessionmaker(
         engine, autoflush=False, expire_on_commit=False,

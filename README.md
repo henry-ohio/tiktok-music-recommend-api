@@ -77,3 +77,10 @@ TODO
 
 > Note that for now I only recommend based on max attribute count.
 
+# Database Migration
+
+## Create migration
+
+
+
+## Apply migration

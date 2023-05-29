@@ -1,8 +1,9 @@
+from features.recommend_music.data import RecommendMusicRepository
 from .base import BaseRecommendMusicUsecase
 
 class UsecaseCrawlAndAnalyzeTikTokData(BaseRecommendMusicUsecase):
-    def __init__(self) -> None:
-        pass
+    def __init__(self):
+        super().__init__()
 
     def execute(self):
         """
