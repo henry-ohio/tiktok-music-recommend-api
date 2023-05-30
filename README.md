@@ -79,7 +79,7 @@ Therefore in this design, I only have 3 tables: `Author`, `Video` and `Music`. E
 
 ### ERD:
 
-TODO
+![ERD](doc/images/ERD.png "ERD")
 
 - Table **author**: General info for the Author, include name, description,... and platform specific attributes. E.g, TikTok profile: `id`, `name`, `signature`...
 - Table **music**, **video**: name, link, data, and platform data (I use simple JSON for now, but it should be separated tables for each provider).
